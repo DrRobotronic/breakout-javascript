@@ -38,6 +38,18 @@ for (c = 0; c < brickColumnCount; c++) {
 var score = 0,
     lives = 3;
 
+// Sound variables.
+var bounce = new Audio("media/bounce.wav"),
+    damage = new Audio("media/damage.wav"),
+    win = new Audio("media/win.wav");
+    music = new Audio("media/pixelland.mp3");
+
+bounce.volume = 0.4;
+damage.volume = 0.4;
+win.volume = 0.4;
+music.volume = 0.5;
+music.loop = true;
+
 function clearCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
@@ -65,10 +77,12 @@ function collisionDetection() {
             if (b.status == 1) {
                 if (x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
                     dy = -dy;
+                    bounce.play();
                     b.status = 0;
                     score++;
 
                     if (score == brickRowCount * brickColumnCount) {
+                        win.play();
                         alert("YOU WIN, CONGRATULATIONS!");
                         document.location.reload();
                     }
@@ -131,16 +145,20 @@ function moveBall() {
     // Handles collision detection with left and right walls.
     if (x + dx < rad || x + dx > canvas.width - rad) {
         dx = -dx;
+        bounce.play();
     }
 
     // Handles collision detection with top and bottom walls.
     if (y + dy < rad) {
         dy = -dy;
+        bounce.play();
     } else if (y + dy > canvas.height - rad - (paddleHeight * 2)) {
         if (x > paddleX && x < paddleX + paddleWidth && y + dy > canvas.height - rad - (paddleHeight * 2)) {
             dy = -dy;
+            bounce.play();
         } else if (y + dy > canvas.height - r) {
             lives--;
+            damage.play();
             if (lives) {
                 x = canvas.width / 2;
                 y = canvas.height - 30;
@@ -180,3 +198,4 @@ document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 
 draw();
+music.play();
