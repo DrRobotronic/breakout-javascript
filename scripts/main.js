@@ -2,6 +2,10 @@
 var canvas = document.getElementById("myCanvas"),
     ctx = canvas.getContext("2d");
 
+// Button variables.
+var muteMusicBtn = document.getElementById("muteMusic"),
+    muteAudioBtn = document.getElementById("muteSound");
+
 // Ball variables.
 var x = canvas.width / 2, // Starting x value.
     y = canvas.height - 30, // Starting y value.
@@ -41,8 +45,9 @@ var score = 0,
 // Sound variables.
 var bounce = new Audio("media/bounce.wav"),
     damage = new Audio("media/damage.wav"),
-    win = new Audio("media/win.wav");
-    music = new Audio("media/pixelland.mp3");
+    win = new Audio("media/win.wav"),
+    music = new Audio("media/pixelland.mp3"),
+    audioMuted = false;
 
 bounce.volume = 0.4;
 damage.volume = 0.4;
@@ -181,6 +186,28 @@ function movePaddle() {
     }
 }
 
+function muteMusic() {
+    if (music.muted) {
+        music.muted = false;
+    } else {
+        music.muted = true;
+    }
+}
+
+function muteAudio() {
+    if (audioMuted) {
+        audioMuted = false;
+        bounce.muted = false;
+        damage.muted = false;
+        win.muted = false;
+    } else {
+        audioMuted = true;
+        bounce.muted = true;
+        damage.muted = true;
+        win.muted = true;
+    }
+}
+
 function draw() {
     clearCanvas();
     drawScore();
@@ -196,6 +223,8 @@ function draw() {
 
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
+muteMusicBtn.addEventListener("click", muteMusic, false);
+muteAudioBtn.addEventListener("click", muteAudio, false);
 
 draw();
 music.play();
